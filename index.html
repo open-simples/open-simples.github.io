@@ -345,9 +345,22 @@
             line-height: 1.6;
         }
         .contributors-list a {
-            /* Inherit general link styling */
-             margin-right: 0.25em; /* Ensure space around the dot */
-             margin-left: 0.25em;
+            /* Override general link color */
+            color: inherit; 
+            /* Keep general link padding/margin/radius/transition for hover effect */
+            padding: 0.1em 0.3em;
+            margin: -0.1em -0.3em;
+            border-radius: 4px;
+            background-color: transparent;
+            transition: background-color 0.15s ease-out, color 0.15s ease-out;
+            text-decoration: none; /* Ensure no underline */
+             margin-right: 0.25em; /* Spacing for dot */
+             margin-left: 0.25em; /* Spacing for dot */
+        }
+        .contributors-list a:hover {
+            color: inherit; /* Ensure text color doesn't change */
+            background-color: #f0f0f0; /* Light grey background */
+            text-decoration: none; /* Ensure no underline */
         }
         .contributors-list a:first-child {
              margin-left: 0;
