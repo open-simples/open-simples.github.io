@@ -284,6 +284,40 @@
             color: #0056b3; /* Darker blue text on hover */
             text-decoration: none; /* Ensure no underline on hover */
         }
+
+        /* --- Vibe Coding Text Hover --- */
+        #vibe-coding-trigger {
+            cursor: default; /* Or 'help' */
+            /* Remove styling properties related to background hover */
+            /* padding: 0.1em 0.3em; */
+            /* margin: -0.1em -0.3em; */
+            /* border-radius: 4px; */
+            /* background-color: transparent; */
+            /* transition: background-color 0.15s ease-out, color 0.15s ease-out; */
+            /* Optional: Indicate interactability */
+             border-bottom: 1px dashed #ccc; /* Keep dashed underline */
+        }
+
+        #vibe-coding-trigger:hover {
+            /* Remove background and color change */
+            /* background-color: #e6f2ff; */
+            /* color: #0056b3; */
+            /* Hover state now only triggers JS text swap */
+        }
+        /* -------------------------- */
+
+        /* --- Revealing Word Span Styling --- */
+        .revealing-word {
+            opacity: 0;
+            filter: blur(4px);
+            transition: opacity 0.4s ease-out, filter 0.3s ease-out;
+            display: inline-block; /* Needed for filter/transform transitions */
+            vertical-align: bottom; /* Align baseline */
+        }
+        .revealing-word.word-visible {
+            opacity: 1;
+            filter: blur(0px);
+        }
     </style>
 </head>
 <body>
@@ -291,9 +325,19 @@
         <h1>Open-Simples</h1>
         <p>Open-Simples (OS) is an open-source library of fundamental building blocks for makers and creative technologists,
             simplifying the start of new projects.</p>
-        <p>
-         OS began during <a href="https://github.com/chanulee" target="_blank" rel="noopener noreferrer">Chanwoo</a>'s masters studies at the <a href="https://www.imperial.ac.uk/design-engineering/" target="_blank" rel="noopener noreferrer">Imperial College London</a> and <a href="https://www.rca.ac.uk/" target="_blank" rel="noopener noreferrer">Royal College of Art</a>.
+        
+        <p id="vibe-coding-paragraph">
+            <span id="vibe-coding-trigger" 
+                  data-original-text="OS can be also used for 'vibe' coding."
+                  data-hover-text=" Debugging complex setups (like web + Arduino) in 'vibe coding' can be tricky. OS provides simple, tested building blocks, making it easier to use AI effectively and ensure your project works.">
+                OS can be also used for 'vibe' coding.
+            </span>
         </p>
+         
+        <p>
+            OS began during <a href="https://github.com/chanulee" target="_blank" rel="noopener noreferrer">Chanwoo</a>'s masters studies at the <a href="https://www.imperial.ac.uk/design-engineering/" target="_blank" rel="noopener noreferrer">Imperial College London</a> and <a href="https://www.rca.ac.uk/" target="_blank" rel="noopener noreferrer">Royal College of Art</a>.
+        </p>
+
         <div class="header-buttons">
             <a href="https://github.com/open-simples" target="_blank" rel="noopener noreferrer" class="github-button">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512" width="16" height="16" fill="currentColor"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3 .3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5 .3-6.2 2.3zm44.2-1.7c-2.9 .7-4.9 2.6-4.6 4.9 .3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3 .7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3 .3 2.9 2.3 3.9 1.6 1 3.6 .7 4.3-.7 .7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3 .7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3 .7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
@@ -549,6 +593,72 @@
                     console.error('Failed to copy email: ', err);
                     alert('Failed to copy email.');
                 });
+            });
+        }
+
+        // --- Vibe Coding Text Hover Functionality ---
+        const vibeParagraph = document.getElementById('vibe-coding-paragraph');
+        const vibeSpan = document.getElementById('vibe-coding-trigger'); // The container span
+        let intervalId = null; 
+        const wordRevealSpeed = 100; // Milliseconds between STARTING each word reveal
+
+        if (vibeParagraph && vibeSpan) { 
+            const originalText = vibeSpan.dataset.originalText;
+            const hoverText = vibeSpan.dataset.hoverText.trim(); 
+            const words = hoverText.split(/\s+/); 
+
+            // Store the original content (might just be text) to reset easily
+            vibeSpan.dataset.originalContent = vibeSpan.innerHTML;
+
+            vibeParagraph.addEventListener('mouseenter', () => { 
+                if (intervalId) {
+                    clearInterval(intervalId);
+                    intervalId = null;
+                }
+                // Reset to only the original text
+                vibeSpan.textContent = originalText; 
+                
+                let wordIndex = 0;
+                if (words.length > 0 && words[0] !== '') {
+                    // Add a space after the original text before appending words
+                    vibeSpan.innerHTML += ' '; 
+                    
+                    intervalId = setInterval(() => {
+                        if (wordIndex < words.length) {
+                            // Create a span for the word
+                            const wordSpan = document.createElement('span');
+                            wordSpan.textContent = words[wordIndex]; // Just the word now
+                            wordSpan.classList.add('revealing-word');
+                            
+                            // Append a space text node first
+                            vibeSpan.appendChild(document.createTextNode(' ')); 
+                            // Then append the hidden word span
+                            vibeSpan.appendChild(wordSpan);
+
+                            // Trigger the transition shortly after appending
+                            // Use requestAnimationFrame for better timing before paint
+                            requestAnimationFrame(() => {
+                                requestAnimationFrame(() => { // Double RAF for robustness
+                                    wordSpan.classList.add('word-visible');
+                                });
+                            });
+                            
+                            wordIndex++;
+                        } else {
+                            clearInterval(intervalId); 
+                            intervalId = null;
+                        }
+                    }, wordRevealSpeed);
+                }
+            });
+
+            vibeParagraph.addEventListener('mouseleave', () => { 
+                if (intervalId) {
+                    clearInterval(intervalId);
+                    intervalId = null;
+                }
+                // Restore original content using the stored value
+                vibeSpan.innerHTML = vibeSpan.dataset.originalContent;
             });
         }
     </script>
