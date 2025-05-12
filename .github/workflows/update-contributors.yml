@@ -1,0 +1,56 @@
+name: Update Contributors List
+
+on:
+  schedule:
+    # Run once daily at 03:00 UTC
+    - cron: '0 3 * * *'
+  # Optional: Run manually from the Actions tab
+  workflow_dispatch:
+  # Optional: Run on pushes to the main branch (if you want faster updates)
+  # push:
+  #   branches:
+  #     - main # Or your default branch name
+
+jobs:
+  update_contributors:
+    runs-on: ubuntu-latest
+    permissions:
+      # Need write permission to commit back to the repo
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x' # Use a recent Python 3 version
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests
+
+      - name: Fetch and update contributors
+        run: python .github/scripts/fetch_contributors.py
+        env:
+          # The GITHUB_TOKEN is automatically created by Actions
+          # It's used by the script for authenticated API calls
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Define your addon repos here (adjust as needed)
+          ADDON_REPOS: '[{"user": "chanulee", "repo": "coreOllama"}]'
+          ORG_NAME: 'open-simples'
+          HIDDEN_REPOS: '[{"user": "open-simples", "repo": ".github"}, {"user": "open-simples", "repo": "open-simples.github.io"}]'
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          # Check if index.html was modified
+          if git diff --quiet index.html; then
+            echo "No changes to commit."
+            exit 0
+          fi
+          git add index.html
+          git commit -m "Automated Contributors Update"
+          git push 
