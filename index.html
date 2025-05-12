@@ -318,6 +318,41 @@
             opacity: 1;
             filter: blur(0px);
         }
+
+        /* --- Contributors Section Styling --- */
+        .content-section {
+            /* Use the same max-width and centering as header/main */
+            max-width: 42rem;
+            margin-left: auto;
+            margin-right: auto;
+            padding-left: 2rem;
+            padding-right: 2rem;
+            margin-bottom: 2rem; /* Space before footer */
+        }
+        .content-section h2 {
+            /* Style like other h2 headings */
+            font-size: 1.75rem;
+            color: #333;
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 0.5rem;
+        }
+        .contributors-list {
+            font-size: 0.9375rem; /* 15px */
+            color: #444;
+            line-height: 1.6;
+        }
+        .contributors-list a {
+            /* Inherit general link styling */
+             margin-right: 0.25em; /* Ensure space around the dot */
+             margin-left: 0.25em;
+        }
+        .contributors-list a:first-child {
+             margin-left: 0;
+        }
+        /* --------------------------------- */
     </style>
 </head>
 <body>
@@ -359,6 +394,15 @@
                 <span>Add your project</span>
             </a>
     </main>
+
+    <section id="contributors" class="content-section">
+         <h2>Contributors</h2>
+         <p class="contributors-list">
+             <!-- CONTRIBUTORS START -->
+             <!-- This content will be automatically replaced by a GitHub Action -->
+             <!-- CONTRIBUTORS END -->
+         </p>
+    </section>
 
     <footer>
         <div class="footer-content">
