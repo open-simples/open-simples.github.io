@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Open-Simples</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.5;
+            margin: 0;
+            background-color: #fff;
+            color: #222;
+            font-size: 1rem; /* 16px base */
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        header, main {
+            max-width: 42rem;
+            margin: 0 auto 2rem auto; /* Centered, with bottom margin */
+            background-color: transparent;
+        }
+        header {
+            padding: 2rem;
+        }
+
+        main h2 {
+            margin: 2rem;
+        }
+
+        #tag-filters {
+            margin: 2rem;
+        }
+
+        footer {
+            max-width: 42rem; /* Consistent width */
+            margin: 2rem auto 0 auto; /* Spacing from main content */
+            padding: 1rem 0; /* Padding top/bottom */
+            background-color: transparent; /* rsms.me style */
+            color: #555; /* Lighter text for footer */
+            text-align: left;
+            font-size: 0.875rem; /* 14px */
+            border-top: 1px solid #eee; /* Subtle separator like rsms.me */
+        }
+        h1 {
+            font-size: 2.25rem; /* ~36px */
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+            color: #111;
+        }
+        h2 {
+            font-size: 1.75rem; /* ~28px */
+            color: #333;
+            margin-top: 2.5rem; /* More space above section titles */
+            margin-bottom: 1rem;
+            font-weight: 700;
+            border-bottom: 1px solid #eee; /* Subtle underline for section titles */
+            padding-bottom: 0.5rem;
+        }
+        h3 {
+             font-size: 1.25rem; /* 20px */
+             font-weight: 700;
+             color: #111;
+             margin-bottom: 0.25rem;
+        }
+        h4 {
+            font-size: 1rem; /* 16px */
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+        p {
+            margin-bottom: 1rem;
+        }
+        .header-buttons {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem; /* 12px */
+            margin-top: 1rem; /* Add some space above buttons */
+        }
+        .github-button {
+            display: inline-flex; /* Align icon and text */
+            align-items: center;
+            gap: 0.5rem; /* Space between icon and text */
+            background-color: #161b22; /* GitHub dark color */
+            color: #fff;
+            padding: 0.4rem 0.8rem; /* Adjust padding for size */
+            border-radius: 6px; /* Match sponsor button radius */
+            font-size: 0.875rem; /* 14px */
+            font-weight: 500;
+            line-height: 1.3; /* Ensure consistent height */
+            text-decoration: none;
+            transition: background-color 0.2s ease;
+        }
+        .github-button:hover {
+            background-color: #30363d; /* Slightly lighter on hover */
+            text-decoration: none;
+            color: #fff;
+        }
+        .github-button svg {
+            vertical-align: middle; /* Helps alignment */
+            /* fill is set to currentColor, which is white */
+        }
+        a {
+            color: #007aff; /* Blue link color like rsms.me */
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        #tag-filters {
+            margin-bottom: 1.5rem; /* 24px */
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee; /* Separator */
+        }
+        #tag-filters button {
+            margin: 0 0.5rem 0.5rem 0; /* spacing */
+            padding: 0.375rem 0.75rem; /* 6px 12px */
+            border: 1px solid #ddd;
+            background-color: #fff;
+            color: #333;
+            border-radius: 0.25rem; /* 4px, subtle rounding */
+            cursor: pointer;
+            transition: background-color 0.2s ease, border-color 0.2s ease;
+            font-size: 0.875rem; /* 14px */
+            font-family: 'Inter', sans-serif;
+        }
+        #tag-filters button:hover {
+            background-color: #f0f0f0;
+            border-color: #ccc;
+            color: #000;
+        }
+        #tag-filters button.active {
+            background-color: #007aff;
+            color: white;
+            border-color: #007aff;
+        }
+        #tag-filters button.clear-button {
+             background: none;
+             color: #007aff; /* Match link color */
+             padding: 0;
+             margin-left: 0.5rem;
+             text-decoration: underline;
+             border: none;
+             font-size: 0.875rem; /* 14px */
+             font-weight: 400;
+         }
+          #tag-filters button.clear-button:hover {
+             background: none;
+             font-weight: 400;
+             color: #0056b3; /* Darker blue on hover */
+             text-decoration: underline;
+          }
+        #repos-container {
+            display: grid;
+            grid-template-columns: 1fr; /* Single column for a cleaner list */
+            gap: 1rem; /* 24px */
+            margin-top: 0; /* No extra top margin if #tag-filters has bottom margin/border */
+        }
+        .repo-card {
+            border: none; /* No border */
+            padding: 1rem; /* No padding on card itself, structure with margins */
+            margin: 0 1rem;
+            background-color: transparent; /* No distinct background */
+            transition: 0.3s; /* No transition */
+            overflow: visible;
+            border-radius: 1rem; /* 8px */
+        }
+        .repo-card:hover {
+            background-color: #f9f9f9; /* Subtle background change on hover */
+        }
+        .repo-card h3 {
+            margin-top: 0;
+            font-size: 1.125rem; /* 18px */
+            margin-bottom: 0.25rem;
+        }
+        .repo-card h3 a {
+            color: #111; /* Repo title color */
+        }
+        .repo-card h3 a:hover {
+            color: #007aff;
+        }
+        .repo-card p {
+            font-size: 0.9375rem; /* 15px */
+            margin-bottom: 0.5rem;
+            color: #444; /* Slightly lighter than body text */
+            line-height: 1.6;
+        }
+        .repo-tags, .repo-stats {
+            font-size: 0.8125rem; /* 13px */
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+        .repo-tags span, .repo-stats span {
+            display: inline-block;
+            background-color: transparent;
+            color: #666;
+            padding: 0;
+            margin-right: 0.75rem; /* Space between tags/stats */
+            border-radius: 0;
+        }
+        .repo-tags span:not(:last-child):after {
+            content: '·';
+            margin-left: 0.75rem;
+            color: #ccc;
+        }
+        .repo-stats span:not(:last-child):after {
+            content: '·';
+            margin-left: 0.75rem;
+            color: #ccc;
+        }
+        footer {
+            background-color: #f4f4f4;
+            padding: 2rem; /* 20px */
+        }
+
+         footer p {
+             font-size: 0.875rem; /* 14px */
+             line-height: 1.5;
+         }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Open-Simples</h1>
+        <p>Open-Simples (OS) is an open-source library of fundamental building blocks for makers and creative technologists,
+            simplifying the start of new projects.</p>
+        <p>
+         OS began during <a href="https://github.com/chanulee" target="_blank" rel="noopener noreferrer">Chanwoo</a>'s Master's studies at the Imperial College London and Royal College of Art.
+        </p>
+        <div class="header-buttons">
+            <a href="https://github.com/open-simples" target="_blank" rel="noopener noreferrer" class="github-button">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512" width="16" height="16" fill="currentColor"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3 .3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5 .3-6.2 2.3zm44.2-1.7c-2.9 .7-4.9 2.6-4.6 4.9 .3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3 .7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3 .3 2.9 2.3 3.9 1.6 1 3.6 .7 4.3-.7 .7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3 .7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3 .7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+                <span>GitHub</span>
+            </a>
+            <iframe src="https://github.com/sponsors/chanulee/button" title="Sponsor chanulee" height="32" width="114" style="border: 0; border-radius: 6px;"></iframe>
+        </div>
+    </header>
+
+    <main>
+        <h2>Repos</h2>
+        <div id="tag-filters">
+            <!-- Tag filters will be generated here -->
+        </div>
+        <div id="repos-container">
+            <!-- Repository cards will be generated here -->
+        </div>
+    </main>
+
+    <footer>
+        <div>
+            <h4>About the Author</h4>
+            <p>Information about Chanwoo Lee goes here. Maybe a short bio or link to a personal site.</p>
+        </div>
+        <div>
+            <h4>Contact</h4>
+            <p>Contact details (e.g., email, social media links) go here.</p>
+            <p>&copy; 2024 Open-Simples</p>
+        </div>
+    </footer>
+
+    <script>
+        const reposContainer = document.getElementById('repos-container');
+        const tagFiltersContainer = document.getElementById('tag-filters');
+        const GITHUB_USER = 'open-simples';
+        let allReposData = []; // To store fetched repo data
+        let allTags = new Set(); // To store all unique tags
+        let activeTags = new Set(); // To store currently selected tags
+
+        // --- Add-on Repos from personal account ---
+        const addonRepos = [
+            { user: 'chanulee', repo: 'coreOllama' },
+            // Add more { user: 'username', repo: 'reponame' } objects here
+        ];
+        // -----------------------------------------
+
+        // --- Repos to Hide ---
+        const hiddenRepos = [
+            { user: 'open-simples', repo: '.github' },
+            // Add more { user: 'username', repo: 'reponame' } objects here
+        ];
+        // ----------------------
+
+        async function fetchRepos() {
+            reposContainer.innerHTML = '<p>Loading repositories...</p>'; // Add loading indicator
+            tagFiltersContainer.innerHTML = ''; // Clear filters while loading
+            try {
+                // Fetch repos from open-simples organization
+                const orgReposPromise = fetch(`https://api.github.com/users/${GITHUB_USER}/repos?sort=updated&per_page=100`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`GitHub API error (org): ${response.status}`);
+                        }
+                        return response.json();
+                    });
+
+                // Fetch specific add-on repos
+                const addonRepoPromises = addonRepos.map(info =>
+                    fetch(`https://api.github.com/repos/${info.user}/${info.repo}`)
+                        .then(response => {
+                            if (!response.ok) {
+                                // Don't throw, just log and return null so Promise.all doesn't fail completely
+                                console.warn(`GitHub API error (repo ${info.user}/${info.repo}): ${response.status}`);
+                                return null;
+                            }
+                            return response.json();
+                        })
+                );
+
+                // Wait for all fetches to complete
+                const [orgRepos, specificReposRaw] = await Promise.all([
+                    orgReposPromise,
+                    Promise.all(addonRepoPromises)
+                ]);
+
+                // Filter out any null results from failed add-on fetches
+                const specificRepos = specificReposRaw.filter(repo => repo !== null);
+
+                // Combine repos
+                const combinedRepos = [...orgRepos, ...specificRepos];
+
+                // Filter out hidden repos
+                const filteredRepos = combinedRepos.filter(repo => {
+                    // Check if the repo matches any entry in hiddenRepos
+                    return !hiddenRepos.some(hidden =>
+                        repo.owner.login.toLowerCase() === hidden.user.toLowerCase() &&
+                        repo.name.toLowerCase() === hidden.repo.toLowerCase()
+                    );
+                });
+
+                // Remove potential duplicates from the filtered list
+                const uniqueRepoIds = new Set();
+                const uniqueFilteredRepos = filteredRepos.filter(repo => {
+                    if (!uniqueRepoIds.has(repo.id)) {
+                        uniqueRepoIds.add(repo.id);
+                        return true;
+                    }
+                    return false;
+                });
+
+                // Set the final data and sort
+                allReposData = uniqueFilteredRepos;
+                allReposData.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at));
+
+                displayRepos(allReposData);
+                generateTagFilters(); // Filters generated based on the final combined list
+
+            } catch (error) {
+                console.error('Error fetching repos:', error);
+                reposContainer.innerHTML = '<p>Failed to load repositories. Check the console for details.</p>';
+            }
+        }
+
+        function displayRepos(repos) {
+            reposContainer.innerHTML = ''; // Clear existing content
+            if (repos.length === 0) {
+                 reposContainer.innerHTML = '<p>No repositories found or filtered out.</p>';
+                 return;
+            }
+
+            repos.forEach(repo => {
+                const card = document.createElement('div');
+                card.className = 'repo-card';
+                // Store tags in a data attribute for filtering
+                card.dataset.tags = JSON.stringify(repo.topics || []);
+
+                // Add repo details to card
+                card.innerHTML = `
+                    <h3><a href="${repo.html_url}" target="_blank" rel="noopener noreferrer">${repo.name}</a></h3>
+                    <p>${repo.description || 'No description provided.'}</p>
+                    <div class="repo-tags">
+                        ${(repo.topics || []).map(tag => `<span>${tag}</span>`).join('')}
+                    </div>
+                    <div class="repo-stats">
+                        <span>⭐ ${repo.stargazers_count}</span>
+                        <span> Forks: ${repo.forks_count}</span>
+                    </div>
+                `;
+                reposContainer.appendChild(card);
+
+                // Collect all tags
+                (repo.topics || []).forEach(tag => allTags.add(tag));
+            });
+        }
+
+        function generateTagFilters() {
+            allTags.clear(); // Ensure tags are recalculated if fetchRepos is called again
+            allReposData.forEach(repo => {
+                (repo.topics || []).forEach(tag => allTags.add(tag));
+            });
+
+            tagFiltersContainer.innerHTML = ''; // Clear existing filters
+
+            // Add button for each tag
+            Array.from(allTags).sort().forEach(tag => { // Sort tags alphabetically
+                const button = document.createElement('button');
+                button.textContent = tag;
+                button.dataset.tag = tag; // Store tag in data attribute
+                button.onclick = () => toggleTag(tag);
+                tagFiltersContainer.appendChild(button);
+            });
+
+            // Add 'Clear All' button AFTER tags
+            const clearButton = document.createElement('button');
+            clearButton.textContent = 'Clear All';
+            clearButton.classList.add('clear-button'); // Add specific class
+            clearButton.onclick = () => {
+                activeTags.clear();
+                updateRepoDisplayAndFilters();
+            };
+            tagFiltersContainer.appendChild(clearButton);
+
+            updateFilterButtonsState(); // Set initial state
+        }
+
+        function toggleTag(tag) {
+            if (activeTags.has(tag)) {
+                activeTags.delete(tag);
+            } else {
+                activeTags.add(tag);
+            }
+            updateRepoDisplayAndFilters();
+        }
+
+        function updateRepoDisplayAndFilters() {
+            const filteredRepos = activeTags.size === 0
+                ? allReposData // Show all if no tags are active
+                : allReposData.filter(repo => {
+                    const repoTags = repo.topics || [];
+                    // Show repo if it includes at least one of the active tags
+                    return Array.from(activeTags).some(activeTag => repoTags.includes(activeTag));
+                });
+
+            displayRepos(filteredRepos); // Display the filtered repos
+            updateFilterButtonsState(); // Update button appearance
+        }
+
+        function updateFilterButtonsState() {
+             const buttons = tagFiltersContainer.querySelectorAll('button[data-tag]');
+             buttons.forEach(button => {
+                if (activeTags.has(button.dataset.tag)) {
+                    button.classList.add('active');
+                } else {
+                    button.classList.remove('active');
+                }
+            });
+        }
+
+        // Fetch repos when the page loads
+        document.addEventListener('DOMContentLoaded', fetchRepos);
+    </script>
+</body>
+</html>
