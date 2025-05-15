@@ -390,6 +390,40 @@
         }
         /* --------------------------------- */
 
+        /* --- Logo Carousel Styling --- */
+        .logo-carousel-container {
+            width: 100%;
+            overflow: hidden;
+            margin-top: 1.5rem; /* Space below the h2 of this section */
+        }
+
+        .logo-carousel-track {
+            display: flex;
+            /* CSS animation removed, JS will handle it */
+        }
+
+        .logo-carousel-track img {
+            height: 80px; /* Adjust default logo height as needed */
+            width: auto;   /* Maintain aspect ratio */
+            margin: 0;     /* Ensures 0px gap between image elements */
+            padding: 0;    /* Ensures 0px padding around image content */
+            flex-shrink: 0; /* Prevent logos from shrinking */
+        }
+
+        /* CSS animation keyframes removed */
+        /* --- End Logo Carousel Styling --- */
+
+        .logo-carousel-title {
+            font-size: 1rem; /* Smaller than default h2, e.g., 18px */
+            color: #666; /* Grey color */
+            text-align: center;
+            border-bottom: none; /* Remove underline from default h2 style */
+            margin-top: 2rem; /* Adjust top margin as needed */
+            margin-bottom: 1rem; /* Space before the carousel */
+            font-weight: 500; /* Lighter than default h2 */
+            padding-bottom: 0; /* Remove padding from default h2 style */
+        }
+
         /* --- Footer Disclaimer Styling --- */
         .disclaimer {
             font-size: 0.75rem; /* Smaller text */
@@ -464,6 +498,27 @@
     </header>
 
     <main>
+        <div class="logo-carousel-container">
+            <h2 class="logo-carousel-title">Made & Used by people at</h2>
+
+            <div class="logo-carousel-track">
+                <!-- First set of logos - Replace with your actual SVG paths -->
+                <img src="logos/logo1.svg" alt="Company 1 Logo">
+                <img src="logos/logo2.svg" alt="Company 2 Logo">
+                <img src="logos/logo3.svg" alt="Company 3 Logo">
+                <img src="logos/logo4.svg" alt="Company 4 Logo">
+                <img src="logos/logo5.svg" alt="Company 5 Logo">
+                <img src="logos/logo6.svg" alt="Company 6 Logo">
+                <!-- Second set of logos (for seamless loop) - Replace with your actual SVG paths -->
+                <img src="logos/logo1.svg" alt="Company 1 Logo">
+                <img src="logos/logo2.svg" alt="Company 2 Logo">
+                <img src="logos/logo3.svg" alt="Company 3 Logo">
+                <img src="logos/logo4.svg" alt="Company 4 Logo">
+                <img src="logos/logo5.svg" alt="Company 5 Logo">
+                <img src="logos/logo6.svg" alt="Company 6 Logo">
+            </div>
+        </div>
+
         <h2>Repos</h2>
         <div id="tag-filters">
             <!-- Tag filters will be generated here -->
@@ -822,6 +877,99 @@
                 }
             });
         }
+
+        // --- Logo Carousel JS Animation ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const track = document.querySelector('.logo-carousel-track');
+            if (!track) {
+                console.warn("Logo carousel track not found.");
+                return;
+            }
+
+            const logos = Array.from(track.children);
+            if (logos.length === 0) {
+                console.warn("No logos found in carousel track.");
+                return;
+            }
+            // Ensure we have an even number for duplication, otherwise this logic won't work well.
+            // The HTML should already have duplicates.
+            const originalLogosCount = logos.length / 2;
+
+            let scrollAmount = 0;
+            const scrollSpeed = 0.5; // Pixels per frame. Adjust for speed.
+            let animationFrameId = null;
+            let scrollWidth = 0;
+
+            function calculateScrollWidth() {
+                let width = 0;
+                for (let i = 0; i < originalLogosCount; i++) {
+                    if(logos[i]) width += logos[i].offsetWidth;
+                }
+                return width;
+            }
+
+            function startAnimationSequence() {
+                scrollWidth = calculateScrollWidth();
+                if (scrollWidth > 0 && !animationFrameId) {
+                    animateLogos();
+                } else if (scrollWidth === 0) {
+                     console.warn("Logo carousel scroll width is 0. Animation will not start until images load or have width.");
+                }
+            }
+            
+            // Initial calculation and animation start attempt
+            // We need to make sure images (especially SVGs) are loaded to get correct offsetWidth
+            let imagesToLoad = logos.filter(logo => logo.tagName === 'IMG' && !logo.complete).length;
+            if (imagesToLoad === 0) { // All images already loaded (e.g. cached or not IMG tags)
+                startAnimationSequence();
+            } else {
+                logos.forEach(logo => {
+                    if (logo.tagName === 'IMG' && !logo.complete) {
+                        logo.onload = logo.onerror = () => {
+                            imagesToLoad--;
+                            if (imagesToLoad === 0) {
+                                startAnimationSequence();
+                            }
+                        };
+                    }
+                });
+            }
+
+            function animateLogos() {
+                if (scrollWidth <= 0) { // Safety check
+                    animationFrameId = null; // Stop animation if width is invalid
+                    return;
+                }
+                scrollAmount -= scrollSpeed;
+                // When the first set of logos has scrolled completely out of view
+                if (Math.abs(scrollAmount) >= scrollWidth) {
+                    scrollAmount += scrollWidth; // Reset position
+                }
+                track.style.transform = `translateX(${scrollAmount}px)`
+                animationFrameId = requestAnimationFrame(animateLogos);
+            }
+
+            /* // Optional: Pause on hover - REMOVED
+            track.addEventListener(\'mouseenter\', () => {\n                if (animationFrameId) {\n                    cancelAnimationFrame(animationFrameId);\n                    animationFrameId = null;\n                }\n            });\n
+            track.addEventListener(\'mouseleave\', () => {\n                if (!animationFrameId && scrollWidth > 0) { // Only restart if not already running and width is valid\n                    animateLogos();\n                }\n            });
+            */
+            
+            let resizeTimeout;
+            window.addEventListener('resize', () => {
+                if (animationFrameId) {
+                    cancelAnimationFrame(animationFrameId);
+                    animationFrameId = null;
+                }
+                track.style.transform = `translateX(0px)`; // Reset visually before recalc
+                scrollAmount = 0;
+                
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(() => {
+                    startAnimationSequence(); // Recalculate and restart animation
+                }, 250); // Debounce resize handling
+            });
+        });
+        // --- End Logo Carousel JS Animation ---
     </script>
 </body>
 </html>
